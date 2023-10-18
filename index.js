@@ -1,5 +1,5 @@
 const express = require("express");
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors = require("cors");
 require('dotenv').config()
 const app = express();
@@ -30,7 +30,7 @@ async function run() {
         const productCollection = client.db('productDB').collection('product');
         const userCollection = client.db('productDB').collection('user');
 
-        // coffiee related apis
+        // prduct related apis
 
         app.get('/product', async (req, res) => {
             const cursor = productCollection.find();
@@ -46,9 +46,9 @@ async function run() {
         })
 
         app.post('/product', async (req, res) => {
-            const newCoffiee = req.body;
-            console.log(newCoffiee);
-            const result = await productCollection.insertOne(newCoffiee)
+            const newProduct = req.body;
+            console.log(newProduct);
+            const result = await productCollection.insertOne(newProduct)
             res.send(result)
         })
 
@@ -56,19 +56,19 @@ async function run() {
             const id = req.params.id;
             const filter = { _id: new ObjectId(id) };
             const options = { upsert: true };
-            const updatedCoffiee = req.body;
-            const coffiee = {
+            const updatedProduct = req.body;
+            const product = {
                 $set: {
-                    name: updatedCoffiee.name,
-                    quantity: updatedCoffiee.quantity,
-                    supplier: updatedCoffiee.supplier,
-                    taste: updatedCoffiee.taste,
-                    category: updatedCoffiee.category,
-                    details: updatedCoffiee.details,
-                    photo: updatedCoffiee.photo
+                    name: updatedProduct.name,
+                    price: updatedProduct.price,
+                    brand: updatedProduct.brand,
+                    type: updatedProduct.type,
+                    rating: updatedProduct.rating,
+                    details: updatedProduct.details,
+                    photo: updatedProduct.photo
                 }
             }
-            const result = await productCollection.updateOne(filter, coffiee, options)
+            const result = await productCollection.updateOne(filter, product, options)
             res.send(result);
 
         })
