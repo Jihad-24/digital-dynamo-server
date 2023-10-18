@@ -29,6 +29,7 @@ async function run() {
 
         const productCollection = client.db('productDB').collection('product');
         const brandsCollection = client.db('productDB').collection('brands');
+        const cartCollection = client.db('productDB').collection('mycart');
         const userCollection = client.db('productDB').collection('user');
 
         // prduct related apis
@@ -38,6 +39,13 @@ async function run() {
             const result = await cursor.toArray();
             res.send(result);
         })
+
+        app.get('/mycart', async (req, res) => {
+            const cursor = cartCollection.find();
+            const result = await cursor.toArray();
+            res.send(result)
+        })
+
         app.get('/brands', async (req, res) => {
             const cursor = brandsCollection.find();
             const result = await cursor.toArray();
@@ -57,6 +65,12 @@ async function run() {
             const quary = { brand: new ObjectId(brand) };
             const result = await productCollection.findOne(quary);
             res.send(result);
+        })
+
+        app.post('/mycart', async (req, res) => {
+            const addProduct = req.body;
+            const result = await cartCollection.insertOne(addProduct)
+            res.send(result)
         })
 
         app.post('/product', async (req, res) => {
@@ -87,10 +101,10 @@ async function run() {
 
         })
 
-        app.delete('/product/:id', async (req, res) => {
+        app.delete('/mycart/:id', async (req, res) => {
             const id = req.params.id;
             const quary = { _id: new ObjectId(id) };
-            const result = await productCollection.deleteOne(quary);
+            const result = await cartCollection.deleteOne(quary);
             res.send(result);
         })
 
