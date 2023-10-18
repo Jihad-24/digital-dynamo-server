@@ -28,6 +28,7 @@ async function run() {
         await client.connect();
 
         const productCollection = client.db('productDB').collection('product');
+        const brandsCollection = client.db('productDB').collection('brands');
         const userCollection = client.db('productDB').collection('user');
 
         // prduct related apis
@@ -37,10 +38,23 @@ async function run() {
             const result = await cursor.toArray();
             res.send(result);
         })
+        app.get('/brands', async (req, res) => {
+            const cursor = brandsCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+        
 
         app.get('/product/:id', async (req, res) => {
             const id = req.params.id;
             const quary = { _id: new ObjectId(id) };
+            const result = await productCollection.findOne(quary);
+            res.send(result);
+        })
+
+        app.get('/brands/:brandName', async (req, res) => {
+            const brand = req.params.brand;
+            const quary = { brand: new ObjectId(brand) };
             const result = await productCollection.findOne(quary);
             res.send(result);
         })
@@ -95,25 +109,6 @@ async function run() {
             res.send(result);
         })
 
-        // app.patch('/user', async (req, res) => {
-        //     const user = req.body;
-        //     const filter = { email: user.email }
-        //     const updateUser = {
-        //         $set: {
-        //             email: user.email,
-        //             lastSignInTime: user.lastSignInTime
-        //         }
-        //     }
-        //     const result = await userCollection.updateOne(filter, updateUser)
-        //     res.send(result);
-        // })
-
-        // app.delete('/user/:id', async (req, res) => {
-        //     const id = req.params.id;
-        //     const quary = { _id: new ObjectId(id) };
-        //     const result = await userCollection.deleteOne(quary);
-        //     res.send(result);
-        // })
 
 
         // Send a ping to confirm a successful connection
