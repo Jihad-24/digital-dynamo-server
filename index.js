@@ -53,6 +53,7 @@ async function run() {
 
         app.get('/product/:id', async (req, res) => {
             const id = req.params.id;
+            // console.log(id);
             const quary = { _id: new ObjectId(id) };
             const result = await productCollection.findOne(quary);
             res.send(result);
@@ -60,6 +61,7 @@ async function run() {
 
         app.get('/brands/:brandName', async (req, res) => {
             const brand = req.params.brand;
+            // console.log(brand);
             const quary = { brand: new ObjectId(brand) };
             const result = await productCollection.findOne(quary);
             res.send(result);
@@ -67,6 +69,7 @@ async function run() {
 
         app.post('/mycart', async (req, res) => {
             const addProduct = req.body;
+            // console.log(addProduct);
             const result = await cartCollection.insertOne(addProduct)
             res.send(result)
         })
@@ -96,11 +99,11 @@ async function run() {
             }
             const result = await productCollection.updateOne(filter, product, options)
             res.send(result);
-
         })
 
         app.delete('/mycart/:id', async (req, res) => {
             const id = req.params.id;
+            // console.log(id);
             const quary = { _id: new ObjectId(id) };
             const result = await cartCollection.deleteOne(quary);
             res.send(result);
@@ -121,11 +124,9 @@ async function run() {
             res.send(result);
         })
 
-        // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
-        // await client.close();
     }
 }
 run().catch(console.dir);
