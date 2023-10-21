@@ -38,23 +38,19 @@ async function run() {
         })
 
         app.get('/mycart', async (req, res) => {
-            const userEmail = req.user.email;
-            const cursor = cartCollection.find({ userEmail });
+            const cursor = cartCollection.find();
             const result = await cursor.toArray();
-            res.send(result);
-        });
-        
+            res.send(result)
+        })
 
         app.get('/brands', async (req, res) => {
             const cursor = brandsCollection.find();
             const result = await cursor.toArray();
             res.send(result);
         })
-        
 
         app.get('/product/:id', async (req, res) => {
             const id = req.params.id;
-            // console.log(id);
             const quary = { _id: new ObjectId(id) };
             const result = await productCollection.findOne(quary);
             res.send(result);
@@ -62,7 +58,6 @@ async function run() {
 
         app.get('/brands/:brandName', async (req, res) => {
             const brand = req.params.brand;
-            // console.log(brand);
             const quary = { brand: new ObjectId(brand) };
             const result = await productCollection.findOne(quary);
             res.send(result);
@@ -70,15 +65,12 @@ async function run() {
 
         app.post('/mycart', async (req, res) => {
             const addProduct = req.body;
-            addProduct.userEmail = req.user.email; 
-            const result = await cartCollection.insertOne(addProduct);
-            res.send(result);
-        });
-        
+            const result = await cartCollection.insertOne(addProduct)
+            res.send(result)
+        })
 
         app.post('/product', async (req, res) => {
             const newProduct = req.body;
-            // console.log(newProduct);
             const result = await productCollection.insertOne(newProduct)
             res.send(result)
         })
@@ -105,7 +97,6 @@ async function run() {
 
         app.delete('/mycart/:id', async (req, res) => {
             const id = req.params.id;
-            // console.log(id);
             const quary = { _id: new ObjectId(id) };
             const result = await cartCollection.deleteOne(quary);
             res.send(result);
@@ -121,13 +112,13 @@ async function run() {
 
         app.post('/user', async (req, res) => {
             const user = req.body;
-            // console.log(user);
             const result = await userCollection.insertOne(user);
             res.send(result);
         })
 
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
+
     }
 }
 run().catch(console.dir);
