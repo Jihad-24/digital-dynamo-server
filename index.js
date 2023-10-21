@@ -38,10 +38,12 @@ async function run() {
         })
 
         app.get('/mycart', async (req, res) => {
-            const cursor = cartCollection.find();
+            const userEmail = req.user.email;
+            const cursor = cartCollection.find({ userEmail });
             const result = await cursor.toArray();
-            res.send(result)
-        })
+            res.send(result);
+        });
+        
 
         app.get('/brands', async (req, res) => {
             const cursor = brandsCollection.find();
@@ -68,10 +70,11 @@ async function run() {
 
         app.post('/mycart', async (req, res) => {
             const addProduct = req.body;
-            // console.log(addProduct);
-            const result = await cartCollection.insertOne(addProduct)
-            res.send(result)
-        })
+            addProduct.userEmail = req.user.email; 
+            const result = await cartCollection.insertOne(addProduct);
+            res.send(result);
+        });
+        
 
         app.post('/product', async (req, res) => {
             const newProduct = req.body;
